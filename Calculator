@@ -1,0 +1,130 @@
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+public class Calculator {
+
+	public static void main(String[] args) {
+
+		JFrame frame = new JFrame("Calculator");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		CalcPanel panel = new CalcPanel();
+		frame.getContentPane().add(panel);
+		frame.setSize(250, 400);
+		frame.setVisible(true);
+		frame.setResizable(false);
+	}
+}
+
+class CalcPanel extends JPanel {
+
+	private JTextField screen;
+	private JButton one, two, three, four, five, six, seven, 
+	eight, nine, zero, plus, minus, decimal, 
+	multiply, divide, clear, equal, negative;
+	private JPanel jp1;
+
+	CalcPanel() {
+
+		jp1 = new JPanel(new GridLayout(5,4));
+		setLayout(new BorderLayout());
+
+		screen = new JTextField();
+		screen.setPreferredSize(new Dimension(250, 100));
+		screen.setEditable(false);
+
+		one = new JButton("1");
+		two = new JButton("2");
+		three = new JButton("3");
+		four = new JButton("4");
+		five = new JButton("5");
+		six = new JButton("6");
+		seven = new JButton("7");
+		eight = new JButton("8");
+		nine = new JButton("9");
+		zero = new JButton("0");
+		plus = new JButton("+");
+		minus = new JButton("-");
+		decimal = new JButton(".");
+		multiply = new JButton("*");
+		divide = new JButton("/");
+		clear = new JButton("C");
+		equal = new JButton("=");
+		negative = new JButton("+/-");
+
+		JButton[] buttons = {clear, negative, decimal, divide, seven, eight, nine,  
+				multiply, four, five, six, minus, one, two, three, plus, zero, equal};
+
+		for(int i = 0; i < buttons.length; i++) {
+			buttons[i].addActionListener(new ButtonListener());
+			jp1.add(buttons[i]);
+		}
+
+		add(screen, BorderLayout.NORTH);
+		add(jp1, BorderLayout.CENTER);
+
+	}
+
+	private class ButtonListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+
+			ScriptEngineManager s = new ScriptEngineManager();
+			ScriptEngine engine = s.getEngineByName("JavaScript");
+
+			if(e.getSource() == one) 
+				screen.setText(screen.getText() + "1");
+			if(e.getSource() == two) 
+				screen.setText(screen.getText() + "2");
+			if(e.getSource() == three) 
+				screen.setText(screen.getText() + "3");
+			if(e.getSource() == four) 
+				screen.setText(screen.getText() + "4");
+			if(e.getSource() == five) 
+				screen.setText(screen.getText() + "5");
+			if(e.getSource() == six) 
+				screen.setText(screen.getText() + "6");
+			if(e.getSource() == seven) 
+				screen.setText(screen.getText() + "7");
+			if(e.getSource() == eight) 
+				screen.setText(screen.getText() + "8");
+			if(e.getSource() == nine) 
+				screen.setText(screen.getText() + "9");
+			if(e.getSource() == zero) 
+				screen.setText(screen.getText() + "0");
+			if(e.getSource() == plus) 
+				screen.setText(screen.getText() + "+");
+			if(e.getSource() == minus) 
+				screen.setText(screen.getText() + "-");
+			if(e.getSource() == multiply) 
+				screen.setText(screen.getText() + "*");
+			if(e.getSource() == divide) 
+				screen.setText(screen.getText() + "/");
+			if(e.getSource() == clear) 
+				screen.setText("");
+			if(e.getSource() == decimal) 
+				screen.setText(screen.getText() + ".");
+			if(e.getSource() == negative) 
+				screen.setText(screen.getText() + "-");
+			if(e.getSource() == equal)
+				try {
+					screen.setText("" + engine.eval(screen.getText()));
+					screen.setHorizontalAlignment(JTextField.CENTER);
+				} catch (ScriptException e1) {
+					e1.printStackTrace();
+				}							
+
+		}
+	}
+}
